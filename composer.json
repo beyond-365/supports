@@ -4,10 +4,9 @@
     "require": {
         "guzzlehttp/guzzle": "^7.3",
         "ext-json": "*",
-        "ext-curl": "*",
-        "psr/log": "^1.1",
         "ext-mbstring": "*",
         "ext-simplexml": "*",
+        "ext-libxml": "*",
         "ext-ctype": "*"
     },
     "require-dev": {
