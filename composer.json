@@ -1,0 +1,31 @@
+{
+    "name": "beyond/supports",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.3",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "psr/log": "^1.1",
+        "ext-mbstring": "*",
+        "ext-simplexml": "*",
+        "ext-ctype": "*"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^4.3",
+        "monolog/monolog": "^2.0",
+        "phpunit/phpunit": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Beyond\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gavin",
+            "email": "soarfreely.z@gamil.com"
+        }
+    ],
+    "description": "http"
+}
