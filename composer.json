@@ -1,5 +1,5 @@
 {
-    "name": "gobeyond/supports",
+    "name": "beyond/supports",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^7.3",
@@ -22,9 +22,9 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "gobeyond",
+            "name": "beyond",
             "email": "gobeyond@petalmail.com"
         }
     ],
-    "description": "http"
+    "description": "http request"
 }
