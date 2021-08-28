@@ -325,6 +325,29 @@ trait HasHttpRequest
     }
 
     /**
+     * 添加一个中间件
+     *
+     * @param callable $middleware
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function pushMiddleware(callable $middleware, $name = null)
+    {
+        if(!is_null($name) && ($this->app->config['middleware'][$name]['enable'] ?? '') === false) {
+            return $this;
+        }
+
+        if (is_null($name)) {
+            array_push($this->middleware, $middleware);
+        } else {
+            $this->middleware[$name] = $middleware;
+        }
+
+        return $this;
+    }
+
+    /**
      * 获取所有的中间件
      *
      * @return array
