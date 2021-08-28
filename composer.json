@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Beyond\\": "src/"
+            "Beyond\\Supports\\": "src/"
         }
     },
     "license": "MIT",
