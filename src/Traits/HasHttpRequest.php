@@ -50,7 +50,7 @@ trait HasHttpRequest
      * @param string $endpoint
      * @param array $query
      * @param array $headers
-     * @return array|string
+     * @return ResponseInterface
      */
     public function get(string $endpoint, array $query = [], array $headers = [])
     {
@@ -67,7 +67,7 @@ trait HasHttpRequest
      * @param string|array $data
      *
      * @param array $options
-     * @return array|string
+     * @return ResponseInterface
      */
     public function post(string $endpoint, $data, array $options = [])
     {
@@ -88,7 +88,27 @@ trait HasHttpRequest
      * @param array $options
      * @return array|string
      */
+    /**
+     * @param string $method
+     * @param string $endpoint
+     * @param array $options
+     * @return ResponseInterface
+     */
     public function request(string $method, string $endpoint, array $options = [])
+    {
+        return $this->getHttpClient()->{$method}($endpoint, $options);
+    }
+
+
+    /**
+     * Send request.
+     *
+     * @param string $method
+     * @param string $endpoint
+     * @param array $options
+     * @return array|string
+     */
+    public function requestUnwrap(string $method, string $endpoint, array $options = [])
     {
         return $this->unwrapResponse($this->getHttpClient()->{$method}($endpoint, $options));
     }
