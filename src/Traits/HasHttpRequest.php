@@ -54,10 +54,7 @@ trait HasHttpRequest
      */
     public function get(string $endpoint, array $query = [], array $headers = [])
     {
-        return $this->request('get', $endpoint, [
-            'headers' => $headers,
-            'query' => $query,
-        ]);
+        return $this->request('get', $endpoint, compact('headers', 'query'));
     }
 
     /**
