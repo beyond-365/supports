@@ -156,7 +156,7 @@ trait HasHttpRequest
             $parsedUrl = parse_url($url);
 
             $this->baseUri = ($parsedUrl['scheme'] ?? 'http').'://'.
-                $parsedUrl['host'].(isset($parsedUrl['port']) ? (':'.$parsedUrl['port']) : '');
+                $parsedUrl['host'] . (isset($parsedUrl['port']) ? (':'.$parsedUrl['port']) : '');
         }
 
         return $this;
