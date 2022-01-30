@@ -155,8 +155,8 @@ trait HasHttpRequest
         if (property_exists($this, 'baseUri')) {
             $parsedUrl = parse_url($url);
 
-            $this->baseUri = ($parsedUrl['scheme'] ?? 'http').'://'.
-                $parsedUrl['host'].(isset($parsedUrl['port']) ? (':'.$parsedUrl['port']) : '');
+            $this->baseUri = ($parsedUrl['scheme'] ?? 'http') . '://'.
+                $parsedUrl['host'] . (isset($parsedUrl['port']) ? (':' . $parsedUrl['port']) : '');
         }
 
         return $this;
