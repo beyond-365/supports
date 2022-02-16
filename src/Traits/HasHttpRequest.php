@@ -4,8 +4,14 @@
 namespace Beyond\Supports\Traits;
 
 
+use Closure;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -83,19 +89,12 @@ trait HasHttpRequest
      * @param string $method
      * @param string $endpoint
      * @param array $options
-     * @return array|string
-     */
-    /**
-     * @param string $method
-     * @param string $endpoint
-     * @param array $options
      * @return ResponseInterface
      */
     public function request(string $method, string $endpoint, array $options = [])
     {
         return $this->getHttpClient()->{$method}($endpoint, $options);
     }
-
 
     /**
      * Send request.
@@ -261,7 +260,7 @@ trait HasHttpRequest
      * @param array $httpOptions
      * @return $this
      */
-    public function setHttpOptions(array $httpOptions): self
+    private function setHttpOptions(array $httpOptions): self
     {
         $this->httpOptions = $httpOptions;
 
@@ -352,5 +351,70 @@ trait HasHttpRequest
     public function getMiddleware()
     {
         return $this->middleware;
+    }
+
+    /**
+     * @param int $maxRetries
+     * @return $this
+     */
+    public function retry($maxRetries = 3)
+    {
+        $class = new class($maxRetries) {
+
+            private $maxRetries = 0;
+
+            /**
+             *  constructor.
+             * @param $maxRetries
+             */
+            public function __construct($maxRetries)
+            {
+                $this->maxRetries = $maxRetries;
+            }
+
+            /**
+             * retryDecider
+             * 返回一个匿名函数, 匿名函数若返回false 表示不重试，反之则表示继续重试
+             * @return Closure
+             */
+            public function retryDecider()
+            {
+                return function ($retries, Request $request, Response $response = null, RequestException $exception = null) {
+                    // 超过最大重试次数，不再重试
+                    if ($retries >= $this->maxRetries) {
+                        return false;
+                    }
+
+                    // 请求失败，继续重试
+                    if ($exception instanceof ConnectException) {
+                        return true;
+                    }
+
+                    if ($response) {
+                        // 如果请求有响应，但是状态码大于等于400，继续重试(这里根据自己的业务而定)
+                        if ($response->getStatusCode() >= 400) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+            }
+
+            /**
+             * 返回一个匿名函数，该匿名函数返回下次重试的时间（毫秒）
+             * @return Closure
+             */
+            public function retryDelay()
+            {
+                return function ($numberOfRetries) {
+                    return 1000 * $numberOfRetries;
+                };
+            }
+        };
+
+        $this->getHandlerStack()->push(Middleware::retry($class->retryDecider(), $class->retryDelay()));
+
+        return $this;
     }
 }
