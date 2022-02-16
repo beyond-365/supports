@@ -139,7 +139,7 @@ trait HasHttpRequest
      * Get default http client.
      *
      */
-    public function getDefaultHttpClient(): Client
+    private function getDefaultHttpClient(): Client
     {
         return new Client($this->getOptions());
     }
