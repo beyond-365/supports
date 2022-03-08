@@ -354,22 +354,26 @@ trait HasHttpRequest
     }
 
     /**
-     * @param int $maxRetries
+     * @param int $maxRetries 重试次数
+     * @param int $interval  间隔时间
      * @return $this
      */
-    public function retry($maxRetries = 3)
+    public function retry($maxRetries = 3, $interval = 1000)
     {
-        $class = new class($maxRetries) {
+        $class = new class($maxRetries, $interval) {
 
-            private $maxRetries = 0;
+            private $maxRetries = 1;  // 1次
+            private $interval = 1000; // 1000毫秒
 
             /**
              *  constructor.
              * @param $maxRetries
+             * @param $interval
              */
-            public function __construct($maxRetries)
+            public function __construct($maxRetries, $interval)
             {
-                $this->maxRetries = $maxRetries;
+                $maxRetries > 0 && $this->maxRetries = $maxRetries;
+                $interval > 0 && $this->interval = $interval;
             }
 
             /**
@@ -408,7 +412,7 @@ trait HasHttpRequest
             public function retryDelay()
             {
                 return function ($numberOfRetries) {
-                    return 1000 * $numberOfRetries;
+                    return $this->interval * $numberOfRetries;
                 };
             }
         };
